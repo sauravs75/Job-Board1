@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
@@ -10,6 +12,17 @@ const Login = () => {
     name: '',
   });
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
+
+  // Check if we're on the register route
+  useEffect(() => {
+    if (location.pathname === '/register') {
+      setIsLogin(false);
+    } else {
+      setIsLogin(true);
+    }
+  }, [location]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -42,11 +55,46 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      // Handle form submission
-      console.log('Form submitted:', formData);
+    setApiError('');
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const endpoint = isLogin ? '/api/login' : '/api/register';
+      const response = await fetch(`http://localhost:5000${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to connect to server');
+      }
+
+      const data = await response.json();
+
+      // Store token in localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // Redirect to home page
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      setApiError(error.message || 'Failed to connect to server. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,6 +104,19 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  const toggleForm = () => {
+    setIsLogin(!isLogin);
+    setFormData({
+      email: '',
+      password: '',
+      confirmPassword: '',
+      name: '',
+    });
+    setErrors({});
+    setApiError('');
+    navigate(isLogin ? '/register' : '/login');
   };
 
   return (
@@ -69,7 +130,7 @@ const Login = () => {
             <>
               Or{' '}
               <button
-                onClick={() => setIsLogin(false)}
+                onClick={toggleForm}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 create a new account
@@ -79,7 +140,7 @@ const Login = () => {
             <>
               Already have an account?{' '}
               <button
-                onClick={() => setIsLogin(true)}
+                onClick={toggleForm}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Sign in
@@ -91,6 +152,12 @@ const Login = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {apiError && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+              {apiError}
+            </div>
+          )}
+          
           <form className="space-y-6" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
@@ -212,9 +279,19 @@ const Login = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                disabled={isLoading}
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                {isLogin ? 'Sign in' : 'Create account'}
+                {isLoading ? (
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : (
+                  isLogin ? 'Sign in' : 'Create account'
+                )}
               </button>
             </div>
           </form>
