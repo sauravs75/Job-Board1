@@ -9,12 +9,30 @@ const HeroS = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    
     // Navigate to jobs page with search parameters
     const searchParams = new URLSearchParams();
-    if (searchQuery) searchParams.set('search', searchQuery);
-    if (location) searchParams.set('location', location);
-    if (experience) searchParams.set('experience', experience);
     
+    // If search query is provided, use it as the main search term
+    if (searchQuery) {
+      searchParams.set('search', searchQuery);
+    }
+    
+    // Add location and experience as separate filters
+    if (location) {
+      searchParams.set('location', location);
+    }
+    
+    if (experience) {
+      searchParams.set('experience', experience);
+    }
+    
+    navigate(`/jobs?${searchParams.toString()}`);
+  };
+
+  const handleCompanySearch = (companyName) => {
+    const searchParams = new URLSearchParams();
+    searchParams.set('search', companyName);
     navigate(`/jobs?${searchParams.toString()}`);
   };
 
@@ -26,6 +44,45 @@ const HeroS = () => {
     { value: 'senior', label: 'Senior (5+ years)' },
     { value: 'lead', label: 'Lead/Manager' },
     { value: 'executive', label: 'Executive' }
+  ];
+
+  const topCompanies = [
+    {
+      name: 'TechCorp India',
+      logo: 'https://via.placeholder.com/60x60/3B82F6/FFFFFF?text=TC',
+      jobs: '150+',
+      location: 'Bangalore, Mumbai'
+    },
+    {
+      name: 'StartupXYZ',
+      logo: 'https://via.placeholder.com/60x60/10B981/FFFFFF?text=SX',
+      jobs: '80+',
+      location: 'Remote, Delhi'
+    },
+    {
+      name: 'BigData Corp',
+      logo: 'https://via.placeholder.com/60x60/8B5CF6/FFFFFF?text=BD',
+      jobs: '120+',
+      location: 'Mumbai, Hyderabad'
+    },
+    {
+      name: 'Design Studio',
+      logo: 'https://via.placeholder.com/60x60/F59E0B/FFFFFF?text=DS',
+      jobs: '60+',
+      location: 'Delhi, Bangalore'
+    },
+    {
+      name: 'Innovation Labs',
+      logo: 'https://via.placeholder.com/60x60/EF4444/FFFFFF?text=IL',
+      jobs: '200+',
+      location: 'Pune, Chennai'
+    },
+    {
+      name: 'CloudTech',
+      logo: 'https://via.placeholder.com/60x60/06B6D4/FFFFFF?text=CT',
+      jobs: '90+',
+      location: 'Noida, Gurgaon'
+    }
   ];
 
   return (
@@ -48,13 +105,13 @@ const HeroS = () => {
         {/* Single Search Section */}
         <div className="mt-12 max-w-4xl mx-auto">
           <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 bg-white rounded-lg shadow-lg p-2">
-            {/* Job Title/Keywords */}
+            {/* Job Title/Keywords/Company */}
             <div className="flex-1">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Job title, keywords, or company"
+                placeholder="Job title, company, or keywords"
                 className="w-full px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
@@ -93,27 +150,48 @@ const HeroS = () => {
               Search Jobs
             </button>
           </form>
+        </div>
 
-          {/* Quick Filters */}
-          <div className="mt-8">
-            <p className="text-sm text-gray-600 text-center mb-4">Popular searches:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['Software Engineer', 'Data Scientist', 'Product Manager', 'UX Designer', 'Remote', 'Full-time'].map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => {
-                    setSearchQuery(tag);
-                    // Auto-search when clicking popular tags
-                    const searchParams = new URLSearchParams();
-                    searchParams.set('search', tag);
-                    navigate(`/jobs?${searchParams.toString()}`);
-                  }}
-                  className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+        {/* Top Companies Section */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Top Companies Hiring</h2>
+            <p className="mt-2 text-gray-600">Explore opportunities at leading companies across India</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
+            {topCompanies.map((company, index) => (
+              <div
+                key={index}
+                onClick={() => handleCompanySearch(company.name)}
+                className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer border border-gray-200 group"
+              >
+                <div className="text-center">
+                  <img
+                    src={company.logo}
+                    alt={`${company.name} logo`}
+                    className="w-12 h-12 mx-auto mb-3 rounded-lg"
+                  />
+                  <h3 className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                    {company.name}
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-1">{company.jobs} jobs</p>
+                  <p className="text-xs text-gray-500 mt-1">{company.location}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigate('/jobs')}
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
+            >
+              View All Companies
+              <svg className="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
           </div>
         </div>
 

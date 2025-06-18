@@ -27,25 +27,49 @@ const Jobs = () => {
 
     // Filter by search query (job title, company, description)
     if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(job => 
-        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase())
+        job.title.toLowerCase().includes(query) ||
+        job.company.toLowerCase().includes(query) ||
+        job.description.toLowerCase().includes(query) ||
+        job.experience.toLowerCase().includes(query) ||
+        job.type.toLowerCase().includes(query)
       );
     }
 
     // Filter by location
     if (location) {
+      const locationQuery = location.toLowerCase();
       filtered = filtered.filter(job => 
-        job.location.toLowerCase().includes(location.toLowerCase())
+        job.location.toLowerCase().includes(locationQuery) ||
+        job.location.toLowerCase().includes(locationQuery.replace(',', '')) ||
+        job.location.toLowerCase().includes(locationQuery.split(',')[0]) // Match city name
       );
     }
 
     // Filter by experience
     if (experience) {
-      filtered = filtered.filter(job => 
-        job.experience.toLowerCase().includes(experience.toLowerCase())
-      );
+      const expQuery = experience.toLowerCase();
+      filtered = filtered.filter(job => {
+        const jobExp = job.experience.toLowerCase();
+        // Handle different experience level formats
+        if (expQuery === 'entry' || expQuery === 'entry-level') {
+          return jobExp.includes('entry') || jobExp.includes('junior') || jobExp.includes('1-3');
+        }
+        if (expQuery === 'junior') {
+          return jobExp.includes('junior') || jobExp.includes('1-3') || jobExp.includes('entry');
+        }
+        if (expQuery === 'mid' || expQuery === 'mid-level') {
+          return jobExp.includes('mid') || jobExp.includes('3-5') || jobExp.includes('intermediate');
+        }
+        if (expQuery === 'senior') {
+          return jobExp.includes('senior') || jobExp.includes('5+') || jobExp.includes('lead');
+        }
+        if (expQuery === 'lead' || expQuery === 'lead/manager') {
+          return jobExp.includes('lead') || jobExp.includes('manager') || jobExp.includes('senior');
+        }
+        return jobExp.includes(expQuery);
+      });
     }
 
     // Filter by job type
@@ -159,7 +183,7 @@ const Jobs = () => {
       salary: '₹15,00,000 - ₹25,00,000',
       description: 'We are looking for a Senior Software Engineer to join our team...',
       posted: '2 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/it-manager.png'
     },
     {
       id: 2,
