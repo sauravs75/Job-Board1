@@ -1,14 +1,21 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroS = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [experience, setExperience] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Handle search functionality here
-    console.log('Searching for:', { searchQuery, location, experience });
+    // Navigate to jobs page with search parameters
+    const searchParams = new URLSearchParams();
+    if (searchQuery) searchParams.set('search', searchQuery);
+    if (location) searchParams.set('location', location);
+    if (experience) searchParams.set('experience', experience);
+    
+    navigate(`/jobs?${searchParams.toString()}`);
   };
 
   const experienceLevels = [
@@ -94,7 +101,13 @@ const HeroS = () => {
               {['Software Engineer', 'Data Scientist', 'Product Manager', 'UX Designer', 'Remote', 'Full-time'].map((tag) => (
                 <button
                   key={tag}
-                  onClick={() => setSearchQuery(tag)}
+                  onClick={() => {
+                    setSearchQuery(tag);
+                    // Auto-search when clicking popular tags
+                    const searchParams = new URLSearchParams();
+                    searchParams.set('search', tag);
+                    navigate(`/jobs?${searchParams.toString()}`);
+                  }}
                   className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-blue-100 hover:text-blue-700 transition-colors"
                 >
                   {tag}
