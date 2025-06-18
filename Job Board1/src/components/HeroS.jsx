@@ -137,4 +137,4 @@ const HeroS = () => {
   );
 };
 
-export default HeroS; 
+export default HeroS;

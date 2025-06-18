@@ -1,11 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const Jobs = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [experience, setExperience] = useState('');
   const [jobType, setJobType] = useState('');
   const [salary, setSalary] = useState('');
+  const [filteredJobs, setFilteredJobs] = useState([]);
+
+  // Read search parameters from URL on component mount
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    const urlLocation = searchParams.get('location') || '';
+    const urlExperience = searchParams.get('experience') || '';
+    
+    setSearchQuery(urlSearch);
+    setLocation(urlLocation);
+    setExperience(urlExperience);
+  }, [searchParams]);
+
+  // Filter jobs based on search criteria
+  useEffect(() => {
+    let filtered = jobs;
+
+    // Filter by search query (job title, company, description)
+    if (searchQuery) {
+      filtered = filtered.filter(job => 
+        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by location
+    if (location) {
+      filtered = filtered.filter(job => 
+        job.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+
+    // Filter by experience
+    if (experience) {
+      filtered = filtered.filter(job => 
+        job.experience.toLowerCase().includes(experience.toLowerCase())
+      );
+    }
+
+    // Filter by job type
+    if (jobType) {
+      filtered = filtered.filter(job => 
+        job.type.toLowerCase() === jobType.toLowerCase()
+      );
+    }
+
+    // Filter by salary range
+    if (salary) {
+      // This is a simplified salary filter - you can make it more sophisticated
+      filtered = filtered.filter(job => {
+        const jobSalary = job.salary.toLowerCase();
+        if (salary === '0-3lakh') return jobSalary.includes('3') || jobSalary.includes('5');
+        if (salary === '3-5lakh') return jobSalary.includes('5') || jobSalary.includes('8');
+        if (salary === '5-8lakh') return jobSalary.includes('8') || jobSalary.includes('12');
+        if (salary === '8-12lakh') return jobSalary.includes('12') || jobSalary.includes('18');
+        if (salary === '12-18lakh') return jobSalary.includes('18') || jobSalary.includes('25');
+        if (salary === '18-25lakh') return jobSalary.includes('25') || jobSalary.includes('30');
+        if (salary === '25lakh+') return jobSalary.includes('25') || jobSalary.includes('30') || jobSalary.includes('35');
+        return true;
+      });
+    }
+
+    setFilteredJobs(filtered);
+  }, [searchQuery, location, experience, jobType, salary]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Update URL with current search parameters
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (location) params.set('location', location);
+    if (experience) params.set('experience', experience);
+    if (jobType) params.set('jobType', jobType);
+    if (salary) params.set('salary', salary);
+    
+    setSearchParams(params);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setLocation('');
+    setExperience('');
+    setJobType('');
+    setSalary('');
+    setSearchParams({});
+  };
 
   // Indian states and major cities
   const indianLocations = [
@@ -70,7 +159,7 @@ const Jobs = () => {
       salary: '₹15,00,000 - ₹25,00,000',
       description: 'We are looking for a Senior Software Engineer to join our team...',
       posted: '2 days ago',
-      
+      logo: 'https://via.placeholder.com/50'
     },
     {
       id: 2,
@@ -188,11 +277,6 @@ const Jobs = () => {
     { value: '25lakh+', label: '₹25+ LPA' }
   ];
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log('Searching jobs:', { searchQuery, location, experience, jobType, salary });
-  };
-
   const handleJobClick = (jobId) => {
     console.log('Job clicked:', jobId);
     // Navigate to job details page
@@ -213,7 +297,15 @@ const Jobs = () => {
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+                <button
+                  onClick={clearFilters}
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                >
+                  Clear All
+                </button>
+              </div>
               
               {/* Search */}
               <div className="mb-6">
@@ -308,9 +400,14 @@ const Jobs = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900">
-                    {jobs.length} Jobs Found
+                    {filteredJobs.length} Jobs Found
                   </h2>
-                  <p className="text-gray-600">Showing all available positions across India</p>
+                  <p className="text-gray-600">
+                    {searchQuery || location || experience || jobType || salary 
+                      ? `Showing filtered results` 
+                      : 'Showing all available positions across India'
+                    }
+                  </p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-600">Sort by:</span>
@@ -326,90 +423,112 @@ const Jobs = () => {
 
             {/* Job Cards */}
             <div className="space-y-4">
-              {jobs.map((job) => (
-                <div
-                  key={job.id}
-                  onClick={() => handleJobClick(job.id)}
-                  className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer border border-gray-200"
-                >
-                  <div className="flex items-start space-x-4">
-                    <img
-                      src={job.logo}
-                      alt={`${job.company} logo`}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
-                            {job.title}
-                          </h3>
-                          <p className="text-gray-600">{job.company}</p>
+              {filteredJobs.length > 0 ? (
+                filteredJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    onClick={() => handleJobClick(job.id)}
+                    className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer border border-gray-200"
+                  >
+                    <div className="flex items-start space-x-4">
+                      <img
+                        src={job.logo}
+                        alt={`${job.company} logo`}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600">
+                              {job.title}
+                            </h3>
+                            <p className="text-gray-600">{job.company}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-gray-500">{job.posted}</p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm text-gray-500">{job.posted}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                          </svg>
-                          {job.location}
-                        </span>
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
-                          </svg>
-                          {job.type}
-                        </span>
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                          </svg>
-                          {job.salary}
-                        </span>
-                      </div>
-                      
-                      <p className="mt-3 text-gray-700 line-clamp-2">
-                        {job.description}
-                      </p>
-                      
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex space-x-2">
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                            {job.experience}
+                        
+                        <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            {job.location}
                           </span>
-                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"/>
+                            </svg>
                             {job.type}
                           </span>
+                          <span className="flex items-center">
+                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                            </svg>
+                            {job.salary}
+                          </span>
                         </div>
-                        <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-                          Apply Now
-                        </button>
+                        
+                        <p className="mt-3 text-gray-700 line-clamp-2">
+                          {job.description}
+                        </p>
+                        
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="flex space-x-2">
+                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                              {job.experience}
+                            </span>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                              {job.type}
+                            </span>
+                          </div>
+                          <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
+                            Apply Now
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="bg-white rounded-lg shadow-sm p-12 text-center">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Try adjusting your search criteria or filters.
+                  </p>
+                  <div className="mt-6">
+                    <button
+                      onClick={clearFilters}
+                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
                 </div>
-              ))}
+              )}
             </div>
 
             {/* Pagination */}
-            <div className="mt-8 flex justify-center">
-              <nav className="flex items-center space-x-2">
-                <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
-                  Previous
-                </button>
-                <button className="px-3 py-2 text-sm bg-blue-600 text-white rounded-md">1</button>
-                <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">2</button>
-                <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">3</button>
-                <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
-                  Next
-                </button>
-              </nav>
-            </div>
+            {filteredJobs.length > 0 && (
+              <div className="mt-8 flex justify-center">
+                <nav className="flex items-center space-x-2">
+                  <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                    Previous
+                  </button>
+                  <button className="px-3 py-2 text-sm bg-blue-600 text-white rounded-md">1</button>
+                  <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">2</button>
+                  <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">3</button>
+                  <button className="px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+                    Next
+                  </button>
+                </nav>
+              </div>
+            )}
           </div>
         </div>
       </div>
