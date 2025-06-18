@@ -31,6 +31,13 @@ const NavBar = () => {
                 to="/companies"
                 className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
               >
+                Add Jobs
+              </Link>
+              <Link
+                to="/companies"
+                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+
                 Companies
               </Link>
               <Link
@@ -114,6 +121,12 @@ const NavBar = () => {
               className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
             >
               Jobs
+            </Link>
+            <Link
+              to="/companies"
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
+            >
+              Add Jobs
             </Link>
             <Link
               to="/companies"

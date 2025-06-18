@@ -2,12 +2,24 @@ import { useState } from 'react';
 
 const HeroS = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [location, setLocation] = useState('');
+  const [experience, setExperience] = useState('');
 
   const handleSearch = (e) => {
     e.preventDefault();
     // Handle search functionality here
-    console.log('Searching for:', searchQuery);
+    console.log('Searching for:', { searchQuery, location, experience });
   };
+
+  const experienceLevels = [
+    { value: '', label: 'All Experience' },
+    { value: 'entry', label: 'Entry Level' },
+    { value: 'junior', label: 'Junior (1-3 years)' },
+    { value: 'mid', label: 'Mid Level (3-5 years)' },
+    { value: 'senior', label: 'Senior (5+ years)' },
+    { value: 'lead', label: 'Lead/Manager' },
+    { value: 'executive', label: 'Executive' }
+  ];
 
   return (
     <div className="relative bg-white">
@@ -26,25 +38,70 @@ const HeroS = () => {
           </p>
         </div>
 
-        {/* Search Section */}
-        <div className="mt-12 max-w-xl mx-auto">
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
+        {/* Single Search Section */}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2 bg-white rounded-lg shadow-lg p-2">
+            {/* Job Title/Keywords */}
             <div className="flex-1">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Job title, keywords, or company"
-                className="w-full px-4 py-3 rounded-lg shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
+
+            {/* Location */}
+            <div className="flex-1">
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Location"
+                className="w-full px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Experience Level */}
+            <div className="flex-1">
+              <select
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                className="w-full px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+              >
+                {experienceLevels.map((level) => (
+                  <option key={level.value} value={level.value}>
+                    {level.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Search Button */}
             <button
               type="submit"
-              className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              className="px-8 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors whitespace-nowrap"
             >
               Search Jobs
             </button>
           </form>
+
+          {/* Quick Filters */}
+          <div className="mt-8">
+            <p className="text-sm text-gray-600 text-center mb-4">Popular searches:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {['Software Engineer', 'Data Scientist', 'Product Manager', 'UX Designer', 'Remote', 'Full-time'].map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSearchQuery(tag)}
+                  className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Stats Section */}
