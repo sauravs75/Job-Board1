@@ -106,7 +106,7 @@ const Jobs = () => {
       salary: '₹5,00,000 - ₹8,00,000',
       description: 'Join our React development team...',
       posted: '2 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/reactdev.jpg'
     },
     {
       id: 8,
@@ -118,7 +118,7 @@ const Jobs = () => {
       salary: '₹10,00,000 - ₹16,00,000',
       description: 'Work on cutting-edge AI projects...',
       posted: '6 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/pythonD.jpg'
     }
   ];
 
