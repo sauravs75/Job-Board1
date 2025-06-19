@@ -25,7 +25,7 @@ const mockJobs = [
     salary: '₹8,00,000 - ₹12,00,000',
     description: 'Join our growing team as a Frontend Developer...',
     posted: '1 day ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/XYZ.jpg'
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ const mockJobs = [
     salary: '₹18,00,000 - ₹30,00,000',
     description: 'We are seeking a talented Data Scientist...',
     posted: '3 days ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/BigData.jpg'
   },
   {
     id: 4,
@@ -49,7 +49,7 @@ const mockJobs = [
     salary: '₹6,00,000 - ₹10,00,000',
     description: 'Create amazing user experiences...',
     posted: '5 days ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/Dis.jpg'
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const mockJobs = [
     salary: '₹20,00,000 - ₹35,00,000',
     description: 'Lead product strategy and development...',
     posted: '1 week ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/innovation.jpg'
   },
   {
     id: 6,
@@ -73,7 +73,7 @@ const mockJobs = [
     salary: '₹12,00,000 - ₹18,00,000',
     description: 'Build and maintain our cloud infrastructure...',
     posted: '4 days ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/DevOps.png'
   },
   {
     id: 7,
@@ -85,7 +85,7 @@ const mockJobs = [
     salary: '₹5,00,000 - ₹8,00,000',
     description: 'Join our React development team...',
     posted: '2 days ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/DevOps.png'
   },
   {
     id: 8,
@@ -97,7 +97,7 @@ const mockJobs = [
     salary: '₹10,00,000 - ₹16,00,000',
     description: 'Work on cutting-edge AI projects...',
     posted: '6 days ago',
-    logo: 'https://via.placeholder.com/50'
+    logo: '/public/DevOps.png'
   }
 ];
 

@@ -46,7 +46,7 @@ const Jobs = () => {
       salary: '₹8,00,000 - ₹12,00,000',
       description: 'Join our growing team as a Frontend Developer...',
       posted: '1 day ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/XYZ.jpg'
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ const Jobs = () => {
       salary: '₹18,00,000 - ₹30,00,000',
       description: 'We are seeking a talented Data Scientist...',
       posted: '3 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/BigData.jpg'
     },
     {
       id: 4,
@@ -70,7 +70,7 @@ const Jobs = () => {
       salary: '₹6,00,000 - ₹10,00,000',
       description: 'Create amazing user experiences...',
       posted: '5 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/Dis.jpg'
     },
     {
       id: 5,
@@ -82,7 +82,7 @@ const Jobs = () => {
       salary: '₹20,00,000 - ₹35,00,000',
       description: 'Lead product strategy and development...',
       posted: '1 week ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/innovation.jpg'
     },
     {
       id: 6,
@@ -94,7 +94,7 @@ const Jobs = () => {
       salary: '₹12,00,000 - ₹18,00,000',
       description: 'Build and maintain our cloud infrastructure...',
       posted: '4 days ago',
-      logo: 'https://via.placeholder.com/50'
+      logo: '/public/DevOps.png'
     },
     {
       id: 7,

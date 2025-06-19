@@ -55,31 +55,31 @@ const HeroS = () => {
     },
     {
       name: 'StartupXYZ',
-      logo: 'https://via.placeholder.com/60x60/10B981/FFFFFF?text=SX',
+      logo: '/public/XYZ.jpg',
       jobs: '80+',
       location: 'Remote, Delhi'
     },
     {
       name: 'BigData Corp',
-      logo: 'https://via.placeholder.com/60x60/8B5CF6/FFFFFF?text=BD',
+      logo: '/public/BigData.jpg',
       jobs: '120+',
       location: 'Mumbai, Hyderabad'
     },
     {
       name: 'Design Studio',
-      logo: 'https://via.placeholder.com/60x60/F59E0B/FFFFFF?text=DS',
+      logo: '/public/Dis.jpg',
       jobs: '60+',
       location: 'Delhi, Bangalore'
     },
     {
       name: 'Innovation Labs',
-      logo: 'https://via.placeholder.com/60x60/EF4444/FFFFFF?text=IL',
+      logo: '/public/innovation.jpg',
       jobs: '200+',
       location: 'Pune, Chennai'
     },
     {
       name: 'CloudTech',
-      logo: 'https://via.placeholder.com/60x60/06B6D4/FFFFFF?text=CT',
+      logo: '/public/DevOps.png',
       jobs: '90+',
       location: 'Noida, Gurgaon'
     }
