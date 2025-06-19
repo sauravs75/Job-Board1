@@ -5,6 +5,9 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Jobs from './components/Jobs';
 import AddJob from './components/AddJob';
+import Companies from './components/Companies';
+import AddCompany from './components/AddCompany';
+import About from './components/About';
 
 function App() {
   return (
@@ -16,8 +19,9 @@ function App() {
             <Route path="/" element={<HeroS />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/add-job" element={<AddJob />} />
-            <Route path="/companies" element={<div className="container mx-auto px-4 py-8"><h1 className="text-3xl font-bold">Companies Page</h1></div>} />
-            <Route path="/about" element={<div className="container mx-auto px-4 py-8"><h1 className="text-3xl font-bold">About Page</h1></div>} />
+            <Route path="/companies" element={<Companies />} />
+            <Route path="/add-company" element={<AddCompany />} />
+            <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Login />} />
           </Routes>
