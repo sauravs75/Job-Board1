@@ -49,7 +49,7 @@ const HeroS = () => {
   const topCompanies = [
     {
       name: 'TechCorp India',
-      logo: 'https://via.placeholder.com/60x60/3B82F6/FFFFFF?text=TC',
+      logo: '/public/it-manager.png',
       jobs: '150+',
       location: 'Bangalore, Mumbai'
     },
@@ -111,7 +111,7 @@ const HeroS = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Job title, company, or keywords"
+                placeholder="Job title, Company, or Keywords"
                 className="w-full px-4 py-3 rounded-md border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
