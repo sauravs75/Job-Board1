@@ -9,6 +9,7 @@ const Jobs = () => {
   const [jobType, setJobType] = useState('');
   const [salary, setSalary] = useState('');
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [allJobs, setAllJobs] = useState([]);
 
   // Read search parameters from URL on component mount
   useEffect(() => {
@@ -21,158 +22,8 @@ const Jobs = () => {
     setExperience(urlExperience);
   }, [searchParams]);
 
-  // Filter jobs based on search criteria
-  useEffect(() => {
-    let filtered = jobs;
-
-    // Filter by search query (job title, company, description)
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(job => 
-        job.title.toLowerCase().includes(query) ||
-        job.company.toLowerCase().includes(query) ||
-        job.description.toLowerCase().includes(query) ||
-        job.experience.toLowerCase().includes(query) ||
-        job.type.toLowerCase().includes(query)
-      );
-    }
-
-    // Filter by location
-    if (location) {
-      const locationQuery = location.toLowerCase();
-      filtered = filtered.filter(job => 
-        job.location.toLowerCase().includes(locationQuery) ||
-        job.location.toLowerCase().includes(locationQuery.replace(',', '')) ||
-        job.location.toLowerCase().includes(locationQuery.split(',')[0]) // Match city name
-      );
-    }
-
-    // Filter by experience
-    if (experience) {
-      const expQuery = experience.toLowerCase();
-      filtered = filtered.filter(job => {
-        const jobExp = job.experience.toLowerCase();
-        // Handle different experience level formats
-        if (expQuery === 'entry' || expQuery === 'entry-level') {
-          return jobExp.includes('entry') || jobExp.includes('junior') || jobExp.includes('1-3');
-        }
-        if (expQuery === 'junior') {
-          return jobExp.includes('junior') || jobExp.includes('1-3') || jobExp.includes('entry');
-        }
-        if (expQuery === 'mid' || expQuery === 'mid-level') {
-          return jobExp.includes('mid') || jobExp.includes('3-5') || jobExp.includes('intermediate');
-        }
-        if (expQuery === 'senior') {
-          return jobExp.includes('senior') || jobExp.includes('5+') || jobExp.includes('lead');
-        }
-        if (expQuery === 'lead' || expQuery === 'lead/manager') {
-          return jobExp.includes('lead') || jobExp.includes('manager') || jobExp.includes('senior');
-        }
-        return jobExp.includes(expQuery);
-      });
-    }
-
-    // Filter by job type
-    if (jobType) {
-      filtered = filtered.filter(job => 
-        job.type.toLowerCase() === jobType.toLowerCase()
-      );
-    }
-
-    // Filter by salary range
-    if (salary) {
-      // This is a simplified salary filter - you can make it more sophisticated
-      filtered = filtered.filter(job => {
-        const jobSalary = job.salary.toLowerCase();
-        if (salary === '0-3lakh') return jobSalary.includes('3') || jobSalary.includes('5');
-        if (salary === '3-5lakh') return jobSalary.includes('5') || jobSalary.includes('8');
-        if (salary === '5-8lakh') return jobSalary.includes('8') || jobSalary.includes('12');
-        if (salary === '8-12lakh') return jobSalary.includes('12') || jobSalary.includes('18');
-        if (salary === '12-18lakh') return jobSalary.includes('18') || jobSalary.includes('25');
-        if (salary === '18-25lakh') return jobSalary.includes('25') || jobSalary.includes('30');
-        if (salary === '25lakh+') return jobSalary.includes('25') || jobSalary.includes('30') || jobSalary.includes('35');
-        return true;
-      });
-    }
-
-    setFilteredJobs(filtered);
-  }, [searchQuery, location, experience, jobType, salary]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Update URL with current search parameters
-    const params = new URLSearchParams();
-    if (searchQuery) params.set('search', searchQuery);
-    if (location) params.set('location', location);
-    if (experience) params.set('experience', experience);
-    if (jobType) params.set('jobType', jobType);
-    if (salary) params.set('salary', salary);
-    
-    setSearchParams(params);
-  };
-
-  const clearFilters = () => {
-    setSearchQuery('');
-    setLocation('');
-    setExperience('');
-    setJobType('');
-    setSalary('');
-    setSearchParams({});
-  };
-
-  // Indian states and major cities
-  const indianLocations = [
-    { value: '', label: 'All Locations' },
-    { value: 'remote', label: 'Remote' },
-    { value: 'mumbai', label: 'Mumbai, Maharashtra' },
-    { value: 'delhi', label: 'Delhi, NCR' },
-    { value: 'bangalore', label: 'Bangalore, Karnataka' },
-    { value: 'hyderabad', label: 'Hyderabad, Telangana' },
-    { value: 'chennai', label: 'Chennai, Tamil Nadu' },
-    { value: 'pune', label: 'Pune, Maharashtra' },
-    { value: 'kolkata', label: 'Kolkata, West Bengal' },
-    { value: 'ahmedabad', label: 'Ahmedabad, Gujarat' },
-    { value: 'noida', label: 'Noida, Uttar Pradesh' },
-    { value: 'gurgaon', label: 'Gurgaon, Haryana' },
-    { value: 'indore', label: 'Indore, Madhya Pradesh' },
-    { value: 'bhopal', label: 'Bhopal, Madhya Pradesh' },
-    { value: 'lucknow', label: 'Lucknow, Uttar Pradesh' },
-    { value: 'kanpur', label: 'Kanpur, Uttar Pradesh' },
-    { value: 'nagpur', label: 'Nagpur, Maharashtra' },
-    { value: 'patna', label: 'Patna, Bihar' },
-    { value: 'chandigarh', label: 'Chandigarh' },
-    { value: 'jaipur', label: 'Jaipur, Rajasthan' },
-    { value: 'coimbatore', label: 'Coimbatore, Tamil Nadu' },
-    { value: 'vadodara', label: 'Vadodara, Gujarat' },
-    { value: 'visakhapatnam', label: 'Visakhapatnam, Andhra Pradesh' },
-    { value: 'thane', label: 'Thane, Maharashtra' },
-    { value: 'bhubaneswar', label: 'Bhubaneswar, Odisha' },
-    { value: 'mysore', label: 'Mysore, Karnataka' },
-    { value: 'guwahati', label: 'Guwahati, Assam' },
-    { value: 'dehradun', label: 'Dehradun, Uttarakhand' },
-    { value: 'ranchi', label: 'Ranchi, Jharkhand' },
-    { value: 'jabalpur', label: 'Jabalpur, Madhya Pradesh' },
-    { value: 'agra', label: 'Agra, Uttar Pradesh' },
-    { value: 'varanasi', label: 'Varanasi, Uttar Pradesh' },
-    { value: 'srinagar', label: 'Srinagar, Jammu & Kashmir' },
-    { value: 'amritsar', label: 'Amritsar, Punjab' },
-    { value: 'ludhiana', label: 'Ludhiana, Punjab' },
-    { value: 'kochi', label: 'Kochi, Kerala' },
-    { value: 'thiruvananthapuram', label: 'Thiruvananthapuram, Kerala' },
-    { value: 'bhubaneswar', label: 'Bhubaneswar, Odisha' },
-    { value: 'imphal', label: 'Imphal, Manipur' },
-    { value: 'shillong', label: 'Shillong, Meghalaya' },
-    { value: 'aizawl', label: 'Aizawl, Mizoram' },
-    { value: 'kohima', label: 'Kohima, Nagaland' },
-    { value: 'itanagar', label: 'Itanagar, Arunachal Pradesh' },
-    { value: 'gangtok', label: 'Gangtok, Sikkim' },
-    { value: 'panaji', label: 'Panaji, Goa' },
-    { value: 'port-blair', label: 'Port Blair, Andaman & Nicobar' },
-    { value: 'kavaratti', label: 'Kavaratti, Lakshadweep' }
-  ];
-
   // Mock job data with Indian locations
-  const jobs = [
+  const mockJobs = [
     {
       id: 1,
       title: 'Senior Software Engineer',
@@ -269,6 +120,162 @@ const Jobs = () => {
       posted: '6 days ago',
       logo: 'https://via.placeholder.com/50'
     }
+  ];
+
+  // Load user jobs from localStorage and merge with mock jobs
+  useEffect(() => {
+    const userJobs = JSON.parse(localStorage.getItem('userJobs') || '[]');
+    setAllJobs([...userJobs, ...mockJobs]);
+  }, []);
+
+  // Filter jobs based on search criteria
+  useEffect(() => {
+    let filtered = allJobs;
+
+    // Filter by search query (job title, company, description)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(job => 
+        job.title.toLowerCase().includes(query) ||
+        job.company.toLowerCase().includes(query) ||
+        job.description.toLowerCase().includes(query) ||
+        job.experience.toLowerCase().includes(query) ||
+        job.type.toLowerCase().includes(query)
+      );
+    }
+
+    // Filter by location
+    if (location) {
+      const locationQuery = location.toLowerCase();
+      filtered = filtered.filter(job => 
+        job.location.toLowerCase().includes(locationQuery) ||
+        job.location.toLowerCase().includes(locationQuery.replace(',', '')) ||
+        job.location.toLowerCase().includes(locationQuery.split(',')[0]) // Match city name
+      );
+    }
+
+    // Filter by experience
+    if (experience) {
+      const expQuery = experience.toLowerCase();
+      filtered = filtered.filter(job => {
+        const jobExp = job.experience.toLowerCase();
+        // Handle different experience level formats
+        if (expQuery === 'entry' || expQuery === 'entry-level') {
+          return jobExp.includes('entry') || jobExp.includes('junior') || jobExp.includes('1-3');
+        }
+        if (expQuery === 'junior') {
+          return jobExp.includes('junior') || jobExp.includes('1-3') || jobExp.includes('entry');
+        }
+        if (expQuery === 'mid' || expQuery === 'mid-level') {
+          return jobExp.includes('mid') || jobExp.includes('3-5') || jobExp.includes('intermediate');
+        }
+        if (expQuery === 'senior') {
+          return jobExp.includes('senior') || jobExp.includes('5+') || jobExp.includes('lead');
+        }
+        if (expQuery === 'lead' || expQuery === 'lead/manager') {
+          return jobExp.includes('lead') || jobExp.includes('manager') || jobExp.includes('senior');
+        }
+        return jobExp.includes(expQuery);
+      });
+    }
+
+    // Filter by job type
+    if (jobType) {
+      filtered = filtered.filter(job => 
+        job.type.toLowerCase() === jobType.toLowerCase()
+      );
+    }
+
+    // Filter by salary range
+    if (salary) {
+      // This is a simplified salary filter - you can make it more sophisticated
+      filtered = filtered.filter(job => {
+        const jobSalary = job.salary.toLowerCase();
+        if (salary === '0-3lakh') return jobSalary.includes('3') || jobSalary.includes('5');
+        if (salary === '3-5lakh') return jobSalary.includes('5') || jobSalary.includes('8');
+        if (salary === '5-8lakh') return jobSalary.includes('8') || jobSalary.includes('12');
+        if (salary === '8-12lakh') return jobSalary.includes('12') || jobSalary.includes('18');
+        if (salary === '12-18lakh') return jobSalary.includes('18') || jobSalary.includes('25');
+        if (salary === '18-25lakh') return jobSalary.includes('25') || jobSalary.includes('30');
+        if (salary === '25lakh+') return jobSalary.includes('25') || jobSalary.includes('30') || jobSalary.includes('35');
+        return true;
+      });
+    }
+
+    setFilteredJobs(filtered);
+  }, [searchQuery, location, experience, jobType, salary, allJobs]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Update URL with current search parameters
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('search', searchQuery);
+    if (location) params.set('location', location);
+    if (experience) params.set('experience', experience);
+    if (jobType) params.set('jobType', jobType);
+    if (salary) params.set('salary', salary);
+    
+    setSearchParams(params);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setLocation('');
+    setExperience('');
+    setJobType('');
+    setSalary('');
+    setSearchParams({});
+  };
+
+  // Indian states and major cities
+  const indianLocations = [
+    { value: '', label: 'All Locations' },
+    { value: 'remote', label: 'Remote' },
+    { value: 'mumbai', label: 'Mumbai, Maharashtra' },
+    { value: 'delhi', label: 'Delhi, NCR' },
+    { value: 'bangalore', label: 'Bangalore, Karnataka' },
+    { value: 'hyderabad', label: 'Hyderabad, Telangana' },
+    { value: 'chennai', label: 'Chennai, Tamil Nadu' },
+    { value: 'pune', label: 'Pune, Maharashtra' },
+    { value: 'kolkata', label: 'Kolkata, West Bengal' },
+    { value: 'ahmedabad', label: 'Ahmedabad, Gujarat' },
+    { value: 'noida', label: 'Noida, Uttar Pradesh' },
+    { value: 'gurgaon', label: 'Gurgaon, Haryana' },
+    { value: 'indore', label: 'Indore, Madhya Pradesh' },
+    { value: 'bhopal', label: 'Bhopal, Madhya Pradesh' },
+    { value: 'lucknow', label: 'Lucknow, Uttar Pradesh' },
+    { value: 'kanpur', label: 'Kanpur, Uttar Pradesh' },
+    { value: 'nagpur', label: 'Nagpur, Maharashtra' },
+    { value: 'patna', label: 'Patna, Bihar' },
+    { value: 'chandigarh', label: 'Chandigarh' },
+    { value: 'jaipur', label: 'Jaipur, Rajasthan' },
+    { value: 'coimbatore', label: 'Coimbatore, Tamil Nadu' },
+    { value: 'vadodara', label: 'Vadodara, Gujarat' },
+    { value: 'visakhapatnam', label: 'Visakhapatnam, Andhra Pradesh' },
+    { value: 'thane', label: 'Thane, Maharashtra' },
+    { value: 'bhubaneswar', label: 'Bhubaneswar, Odisha' },
+    { value: 'mysore', label: 'Mysore, Karnataka' },
+    { value: 'guwahati', label: 'Guwahati, Assam' },
+    { value: 'dehradun', label: 'Dehradun, Uttarakhand' },
+    { value: 'ranchi', label: 'Ranchi, Jharkhand' },
+    { value: 'jabalpur', label: 'Jabalpur, Madhya Pradesh' },
+    { value: 'agra', label: 'Agra, Uttar Pradesh' },
+    { value: 'varanasi', label: 'Varanasi, Uttar Pradesh' },
+    { value: 'srinagar', label: 'Srinagar, Jammu & Kashmir' },
+    { value: 'amritsar', label: 'Amritsar, Punjab' },
+    { value: 'ludhiana', label: 'Ludhiana, Punjab' },
+    { value: 'kochi', label: 'Kochi, Kerala' },
+    { value: 'thiruvananthapuram', label: 'Thiruvananthapuram, Kerala' },
+    { value: 'bhubaneswar', label: 'Bhubaneswar, Odisha' },
+    { value: 'imphal', label: 'Imphal, Manipur' },
+    { value: 'shillong', label: 'Shillong, Meghalaya' },
+    { value: 'aizawl', label: 'Aizawl, Mizoram' },
+    { value: 'kohima', label: 'Kohima, Nagaland' },
+    { value: 'itanagar', label: 'Itanagar, Arunachal Pradesh' },
+    { value: 'gangtok', label: 'Gangtok, Sikkim' },
+    { value: 'panaji', label: 'Panaji, Goa' },
+    { value: 'port-blair', label: 'Port Blair, Andaman & Nicobar' },
+    { value: 'kavaratti', label: 'Kavaratti, Lakshadweep' }
   ];
 
   const experienceLevels = [
