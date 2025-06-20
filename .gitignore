@@ -1,13 +1,8 @@
 /node_modules
 /dist
 /build
-/public
-/src
-/test
-/docs
 /logs
 /tmp
-/cache
 .env
 .env.local
 .env.development.local
@@ -21,21 +16,11 @@
 /backend/node_modules
 /backend/dist
 /backend/build
-/backend/public
-/backend/src
-/backend/test
-/backend/docs
 /backend/logs
 /backend/tmp
-/backend/cache
 
 /frontend/node_modules
 /frontend/dist
 /frontend/build
-/frontend/public
-/frontend/src
-/frontend/test
-/frontend/docs
 /frontend/logs
 /frontend/tmp
-/frontend/cache

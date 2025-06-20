@@ -49,37 +49,37 @@ const HeroS = () => {
   const topCompanies = [
     {
       name: 'TechCorp India',
-      logo: '/public/it-manager.png',
+      logo: '/src/images/it-manager.png',
       jobs: '150+',
       location: 'Bangalore, Mumbai'
     },
     {
       name: 'StartupXYZ',
-      logo: '/public/XYZ.jpg',
+      logo: '/src/images/XYZ.jpg',
       jobs: '80+',
       location: 'Remote, Delhi'
     },
     {
       name: 'BigData Corp',
-      logo: '/public/BigData.jpg',
+      logo: '/src/images/BigData.jpg',
       jobs: '120+',
       location: 'Mumbai, Hyderabad'
     },
     {
       name: 'Design Studio',
-      logo: '/public/Dis.jpg',
+      logo: '/src/images/Dis.jpg',
       jobs: '60+',
       location: 'Delhi, Bangalore'
     },
     {
       name: 'Innovation Labs',
-      logo: '/public/innovation.jpg',
+      logo: '/src/images/innovation.jpg',
       jobs: '200+',
       location: 'Pune, Chennai'
     },
     {
       name: 'CloudTech',
-      logo: '/public/DevOps.png',
+      logo: '/src/images/DevOps.png', 
       jobs: '90+',
       location: 'Noida, Gurgaon'
     }
