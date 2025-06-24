@@ -34,7 +34,7 @@ const Jobs = () => {
       salary: '₹15,00,000 - ₹25,00,000',
       description: 'We are looking for a Senior Software Engineer to join our team...',
       posted: '2 days ago',
-      logo: '/public/images/it-manager.png'
+      logo: '/images/it-manager.png'
     },
     {
       id: 2,
@@ -46,8 +46,8 @@ const Jobs = () => {
       salary: '₹8,00,000 - ₹12,00,000',
       description: 'Join our growing team as a Frontend Developer...',
       posted: '1 day ago',
-      logo: '/public/images/XYZ.jpg'
-    },
+      logo: '/images/XYZ.jpg'
+        },
     {
       id: 3,
       title: 'Data Scientist',
@@ -58,7 +58,7 @@ const Jobs = () => {
       salary: '₹18,00,000 - ₹30,00,000',
       description: 'We are seeking a talented Data Scientist...',
       posted: '3 days ago',
-      logo: '/public/images/BigData.jpg'
+      logo: '/images/BigData.jpg'
     },
     {
       id: 4,
@@ -70,7 +70,7 @@ const Jobs = () => {
       salary: '₹6,00,000 - ₹10,00,000',
       description: 'Create amazing user experiences...',
       posted: '5 days ago',
-      logo: '/public/images/Dis.jpg' 
+      logo: '/images/Dis.jpg'
     },
     {
       id: 5,
@@ -82,7 +82,7 @@ const Jobs = () => {
       salary: '₹20,00,000 - ₹35,00,000',
       description: 'Lead product strategy and development...',
       posted: '1 week ago',
-      logo: '/public/images/innovation.jpg'
+      logo: '/images/Innovation.jpg'
     },
     {
       id: 6,
@@ -94,7 +94,7 @@ const Jobs = () => {
       salary: '₹12,00,000 - ₹18,00,000',
       description: 'Build and maintain our cloud infrastructure...',
       posted: '4 days ago',
-      logo: '/public/images/DevOps.png'  
+      logo: '/images/DevOps.png'
     },
     {
       id: 7,
@@ -106,7 +106,7 @@ const Jobs = () => {
       salary: '₹5,00,000 - ₹8,00,000',
       description: 'Join our React development team...',
       posted: '2 days ago',
-      logo: '/public/images/reactdev.jpg'
+      logo: '/images/reactdev.jpg'
     },
     {
       id: 8,
@@ -118,7 +118,7 @@ const Jobs = () => {
       salary: '₹10,00,000 - ₹16,00,000',
       description: 'Work on cutting-edge AI projects...',
       posted: '6 days ago',
-      logo: '/public/images/pythonD.jpg'
+      logo: '/images/pythonD.jpg'
     }
   ];
 
