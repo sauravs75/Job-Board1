@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 // Copy of mock jobs from Jobs.jsx
 const mockJobs = [
@@ -153,13 +154,43 @@ const Companies = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {companies.map((company) => (
-              <div key={company.id} className="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center border border-gray-200">
-                <img src={company.logo} alt={company.name + ' logo'} className="w-16 h-16 rounded-lg mb-3 object-cover" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{company.name}</h3>
-                <p className="text-sm text-gray-600 mb-1">{company.location}</p>
-                <p className="text-xs text-gray-500 text-center">{company.description}</p>
-              </div>
+            {companies.map((company, index) => (
+              <motion.div 
+                key={company.id} 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                whileHover={{
+                  y: -5,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                className="bg-white rounded-lg shadow-sm p-6 flex flex-col items-center border border-gray-200 cursor-pointer group"
+              >
+                <motion.div 
+                  className="flex flex-col items-center"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="w-16 h-16 mb-3"
+                  >
+                    <img 
+                      src={company.logo} 
+                      alt={company.name + ' logo'} 
+                      className="w-full h-full rounded-lg object-cover" 
+                    />
+                  </motion.div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                    {company.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-1">{company.location}</p>
+                  <p className="text-xs text-gray-500 text-center">{company.description}</p>
+                </motion.div>
+              </motion.div>
             ))}
           </div>
         )}

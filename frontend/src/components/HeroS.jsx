@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const HeroS = () => {
   const navigate = useNavigate();
@@ -161,24 +162,43 @@ const HeroS = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
             {topCompanies.map((company, index) => (
-              <div
+              <motion.div
                 key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.1,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                whileHover={{
+                  y: -5,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
                 onClick={() => handleCompanySearch(company.name)}
                 className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow cursor-pointer border border-gray-200 group"
               >
-                <div className="text-center">
-                  <img
-                    src={company.logo}
-                    alt={`${company.name} logo`}
-                    className="w-12 h-12 mx-auto mb-3 rounded-lg"
-                  />
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="w-12 h-12 mx-auto mb-3"
+                  >
+                    <img
+                      src={company.logo}
+                      alt={`${company.name} logo`}
+                      className="w-full h-full object-contain rounded-lg"
+                    />
+                  </motion.div>
                   <h3 className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                     {company.name}
                   </h3>
                   <p className="text-xs text-gray-600 mt-1">{company.jobs} jobs</p>
                   <p className="text-xs text-gray-500 mt-1">{company.location}</p>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             ))}
           </div>
           
