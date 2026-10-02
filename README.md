@@ -15,7 +15,7 @@ A modern job board application built with MERN stack (MongoDB, Express.js, React
 
 - **Frontend**: React.js, Redux, Tailwind CSS
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose ODM
+- **Database**: SQL
 - **Authentication**: JWT (JSON Web Tokens)
 - **Deployment**: (To be added)
 
